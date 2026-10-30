@@ -216,7 +216,7 @@ function M.setup(opts)
 
   -- Changing 'background' must not reload the colorscheme during setup.
   vim.g.colors_name = nil
-  vim.o.background = (style == "light") or "light" or "dark"
+  vim.o.background = (style == "light") and "light" and "dark"
   vim.g.colors_name = "alabaster"
 
   local bg = cfg.transparent and "NONE" or c.bg
