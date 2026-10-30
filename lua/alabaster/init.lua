@@ -15,7 +15,7 @@ local function read_cached_style()
   if file then
     local style = file:read("*l")
     file:close()
-    if style == "dark" or style == "light" then
+    if style == "dark" or style == "light" or style == "vague" then
       return style
     end
   end
@@ -197,7 +197,7 @@ M.colors = {
 
 function M.setup(opts)
   local cfg = vim.tbl_deep_extend("force", M.config, opts or {})
-  assert(cfg.style == nil or cfg.style == "light" or cfg.style == "dark" or cgg.style == "vague", 'Alabaster: style must be "light" or "dark" or "vague"')
+  assert(cfg.style == nil or cfg.style == "light" or cfg.style == "dark" or cfg.style == "vague", 'Alabaster: style must be "light" or "dark" or "vague"')
   M.config = cfg
 
   vim.cmd("hi clear")
