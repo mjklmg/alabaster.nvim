@@ -207,6 +207,11 @@ function M.setup(opts)
 
   -- Priority: explicit config > cached > vim.o.background
   local style = cfg.style or read_cached_style() or vim.o.background
+  -- vague is not treated as background style
+  if type(style) ~= "string" or not M.colors[style] then
+  style = "dark"
+  end
+
   local c = M.colors[style]
 
   -- Changing 'background' must not reload the colorscheme during setup.
