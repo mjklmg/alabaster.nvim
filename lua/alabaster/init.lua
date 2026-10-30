@@ -1,5 +1,4 @@
 local M = {}
-
 M.config = {
   style = nil, -- nil means: check cache, then use vim.o.background
   transparent = false,
@@ -142,11 +141,63 @@ M.colors = {
     term_bright_cyan = "#7FD5E0",
     term_bright_white = "#FFFFFF",
   },
+  vague = {
+	bg = "#141415",
+	fg = "#cdcdcd",
+	comment = "#606079",
+	string = "#7fa563",
+	constant = "#bb9dbd",
+	entity = "#6e94b2",
+	escape = "#878787",
+	punctuation = "#878787",
+	invalid_bg = "#3b242a",
+	invalid_fg = "#d8647e",
+
+	warning = "#f3be7c",
+	info = "#aeaed1",
+	hint = "#7fa563",
+
+	line_highlight = "#1c1c24",
+	selection = "#405065",
+	selection_highlight = "#252530",
+	cursor = "#6e94b2",
+	line_number = "#606079",
+
+	find_match = "#e0a363",
+	find_match_highlight = "#41362a",
+
+	visual = "#405065",
+
+	diff_add_bg = "#293125",
+	diff_delete_bg = "#3b242a",
+	diff_change_bg = "#41362a",
+	diff_text = "#6d583e",
+
+	statusline_bg = "#1c1c24",
+	statusline_fg = "#878787",
+
+	term_black = "#252530",
+	term_red = "#d8647e",
+	term_green = "#7fa563",
+	term_yellow = "#f3be7c",
+	term_blue = "#6e94b2",
+	term_magenta = "#bb9dbd",
+	term_cyan = "#aeaed1",
+	term_white = "#cdcdcd",
+	term_bright_black = "#606079",
+	term_bright_red = "#e08398",
+	term_bright_green = "#99b782",
+	term_bright_yellow = "#f5cb96",
+	term_bright_blue = "#8ba9c1",
+	term_bright_magenta = "#c9b1ca",
+	term_bright_cyan = "#bebeda",
+	term_bright_white = "#d7d7d7",
+  },
 }
 
 function M.setup(opts)
   local cfg = vim.tbl_deep_extend("force", M.config, opts or {})
-  assert(cfg.style == nil or cfg.style == "light" or cfg.style == "dark", 'Alabaster: style must be "light" or "dark"')
+  assert(cfg.style == nil or cfg.style == "light" or cfg.style == "dark" or cgg.style == "vague", 'Alabaster: style must be "light" or "dark" or "vague"')
   M.config = cfg
 
   vim.cmd("hi clear")
@@ -631,10 +682,14 @@ function M.setup(opts)
   vim.api.nvim_create_user_command("Alabaster", function(opts)
     local arg = opts.args:lower()
     if arg == "toggle" then
-      arg = style == "dark" and "light" or "dark"
+		if style == "dark" then arg = "vague"
+		elseif style == "vague" then arg = "light"
+		elseif style == "light" then arg = "dark"
+		else arg = "vague"
+		end
     end
-    if arg ~= "dark" and arg ~= "light" then
-      print("Alabaster: usage - :Alabaster [dark|light|toggle]")
+    if arg ~= "dark" and arg ~= "light" and arg~= "vague" then
+      print("Alabaster: usage - :Alabaster [dark|light|vague|toggle]")
       return
     end
     M.setup({ style = arg })
@@ -642,7 +697,7 @@ function M.setup(opts)
   end, {
     nargs = 1,
     complete = function()
-      return { "dark", "light", "toggle" }
+      return { "dark", "vague", "light", "toggle" }
     end,
   })
 end
